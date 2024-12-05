@@ -1,22 +1,29 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const uniqueValidator = require('mongoose-unique-validator'); // Importer le plugin
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const uniqueValidator = require("mongoose-unique-validator");
 
+// Schéma Admin
 const adminSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true }, // Unique validator sur l'email
-    password: { type: String, required: true },
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
 });
 
-// Utiliser le plugin unique-validator sur le schéma
-adminSchema.plugin(uniqueValidator, { message: '{PATH} doit être unique.' });
+// Plugin pour s'assurer que l'email est unique
+adminSchema.plugin(uniqueValidator, { message: "{PATH} doit être unique." });
 
-// Hashing du mot de passe avant la sauvegarde
-adminSchema.pre('save', async function(next) {
-    if (this.isModified('password')) {
-        this.password = await bcrypt.hash(this.password, 10);
-    }
-    next();
+// Middleware pour hacher le mot de passe avant de sauvegarder
+adminSchema.pre("save", async function (next) {
+  if (this.isModified("password")) {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+  next();
 });
 
-module.exports = mongoose.model('Admin', adminSchema);
+// Méthode pour vérifier le mot de passe
+adminSchema.methods.isValidPassword = async function (password) {
+  return bcrypt.compare(password, this.password);
+};
+
+// Exporter le modèle Admin
+module.exports = mongoose.model("Admin", adminSchema);
