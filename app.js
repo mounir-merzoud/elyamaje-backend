@@ -10,6 +10,9 @@ const app = express();
 // Middleware pour analyser les données JSON dans les requêtes
 app.use(express.json());
 
+const cors = require("cors");
+app.use(cors());
+
 // Connexion à MongoDB
 const connectToDatabase = async () => {
   try {

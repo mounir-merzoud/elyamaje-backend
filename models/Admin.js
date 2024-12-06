@@ -4,9 +4,11 @@ const uniqueValidator = require("mongoose-unique-validator");
 
 // Schéma Admin
 const adminSchema = new mongoose.Schema({
-  name: { type: String, required: true },
+  lastname: { type: String, required: true },
+  firstname: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  type: { type: String, required: false },
 });
 
 // Plugin pour s'assurer que l'email est unique

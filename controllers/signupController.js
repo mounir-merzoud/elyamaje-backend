@@ -2,12 +2,18 @@ const Admin = require("../models/Admin");
 
 exports.signup = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { lastname, firstname, email, password, type } = req.body;
 
-    console.log("Données reçues :", { name, email, password });
+    console.log("Données reçues :", {
+      lastname,
+      firstname,
+      email,
+      password,
+      type,
+    });
 
     // Vérifier que tous les champs sont fournis
-    if (!name || !email || !password) {
+    if (!lastname || !firstname || !email || !password || !type) {
       console.log("Champs manquants");
       return res.status(400).json({ error: "Tous les champs sont requis" });
     }
@@ -20,7 +26,7 @@ exports.signup = async (req, res) => {
     }
 
     // Créer un nouvel administrateur
-    const newAdmin = new Admin({ name, email, password });
+    const newAdmin = new Admin({ lastname, firstname, email, password, type });
     await newAdmin.save();
     console.log("Admin créé avec succès :", newAdmin);
 
